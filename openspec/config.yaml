@@ -1,0 +1,57 @@
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Stack: Next.js 14.2 App Router, React 18.3, TypeScript 5.4 (strict), CSS custom properties.
+  Architecture: App Router with layout/page structure, mock-data separated from UI, custom design tokens.
+  Testing: No test runner installed (strict_tdd: false).
+  Phase: Frontend prototype with mock data, no backend, no auth, no database.
+  Conventions: docs/ai/harness.md (lightweight SDD), AGENTS.md (plan→approve→execute→summarize).
+
+strict_tdd: false
+
+testing:
+  test_runner:
+    available: false
+    command: ""
+    framework: ""
+  layers:
+    unit: { available: false, tool: "" }
+    integration: { available: false, tool: "" }
+    e2e: { available: false, tool: "" }
+  coverage:
+    available: false
+    command: ""
+  quality:
+    linter: { available: true, command: "npm run lint" }
+    type_checker: { available: true, command: "npx tsc --noEmit" }
+    formatter: { available: false, command: "" }
+
+rules:
+  proposal:
+    - Include scope boundaries (what is IN and OUT)
+    - Reference existing mock data structure
+  specs:
+    - Focus on UI behavior and mock interactions
+    - Use declarative scenarios (no Given/When/Then needed for UI-only)
+  design:
+    - Reference DESIGN.md tokens and layout conventions
+    - Keep mock data in data/ separate from components
+    - Document new mock entities in data/ if introduced
+  tasks:
+    - Group by vertical slice (one screen or flow per change)
+    - Keep tasks completable in one session
+    - Prefix verification step with manual review guidance
+  apply:
+    tdd: false
+    test_command: ""
+    - Follow existing component patterns in components/
+    - Maintain mock data separation (data/ vs components/)
+    - Run typecheck after changes: npx tsc --noEmit
+  verify:
+    test_command: ""
+    build_command: "npm run build"
+    coverage_threshold: 0
+    - Manual verification: describe what to check in browser
+  archive:
+    - Warn before merging changes that affect mock data structure

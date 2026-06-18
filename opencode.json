@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    "docs/ai/harness.md"
+  ],
+  "command": {
+    "brief-project": {
+      "description": "Resume el estado del proyecto separando confirmado, hipotesis, fuera de alcance y bloqueos.",
+      "template": "Lee AGENTS.md, docs/ai/harness.md, docs/ai/project-context.md, docs/product/discovery.md y docs/product/mvp.md. Devuelve un resumen breve con: confirmado, hipotesis, fuera de alcance actual, bloqueos y siguiente paso recomendado. No edites archivos."
+    },
+    "prepare-demo": {
+      "description": "Prepara el guion de observacion con la usuaria real.",
+      "template": "Actua como Product Agent para Fincas Pro. Lee AGENTS.md, docs/ai/harness.md y docs/product/discovery.md. Prepara un guion de demo/observacion para la usuaria real que capture tareas, tiempos, campos consultados, listados, filtros, fricciones, trabajo manual y preguntas abiertas. No inventes requisitos y no edites archivos salvo que el usuario lo apruebe."
+    },
+    "extract-open-questions": {
+      "description": "Extrae preguntas abiertas de producto sin convertir hipotesis en requisitos.",
+      "template": "Lee docs/product/discovery.md, docs/product/mvp.md y docs/ai/project-context.md. Extrae preguntas abiertas agrupadas por comunidades, propietarios, recibos, proveedores, bancos, comunicaciones, listados y rendimiento. Marca que informacion esta confirmada y que es hipotesis. No edites archivos salvo aprobacion."
+    },
+    "review-scope": {
+      "description": "Revisa una propuesta buscando sobreingenieria y cambios fuera de fase.",
+      "template": "Revisa la propuesta del usuario contra AGENTS.md, docs/ai/harness.md, docs/ai/ai-rules.md y docs/product/mvp.md. Prioriza hallazgos: fuera de alcance, sobreingenieria, dependencias no aprobadas, datos reales, backend prematuro, reglas legales/bancarias sin validar y falta de verificacion."
+    }
+  }
+}

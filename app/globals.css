@@ -1,0 +1,156 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Font families - Geist for headings, Inter for body */
+  --font-display: "Geist", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Geist", system-ui, sans-serif;
+
+  /* Custom gestoría color palette */
+  --color-primary: #1e3648;
+  --color-primary-foreground: #ffffff;
+
+  --color-sidebar-bg: #0f1a24;
+  --color-sidebar-foreground: #ffffff;
+  --color-sidebar-muted: #94a3b8;
+  --color-sidebar-active: #1e3648;
+  --color-sidebar-hover: rgba(255, 255, 255, 0.08);
+
+  /* Spacing and sizing */
+  --sidebar-width: 260px;
+  --topbar-height: 60px;
+  --radius: 0.5rem;
+}
+
+:root {
+  /* Gestoría background and surface */
+  --background: #f5f4f0;
+  --foreground: #1a1a2e;
+
+  /* Cards and elevated surfaces */
+  --card: #ffffff;
+  --card-foreground: #1a1a2e;
+
+  /* Popovers and overlays */
+  --popover: #ffffff;
+  --popover-foreground: #1a1a2e;
+
+  /* Primary - gestoría primary */
+  --primary: #1e3648;
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #64748b;
+  --secondary-foreground: #ffffff;
+
+  /* Muted - table headers, subtle backgrounds */
+  --muted: #e8e5de;
+  --muted-foreground: #5a5a6e;
+
+  /* Accent */
+  --accent: #f1f0ec;
+  --accent-foreground: #1a1a2e;
+
+  /* Status colors */
+  --destructive: #e11d48;
+  --destructive-foreground: #ffffff;
+
+  /* Borders and inputs */
+  --border: #c8c5be;
+  --input: #c8c5be;
+  --ring: #1e3648;
+
+  /* Chart colors (defaults) */
+  --chart-1: #1e3648;
+  --chart-2: #0d9488;
+  --chart-3: #d97706;
+  --chart-4: #e11d48;
+  --chart-5: #64748b;
+
+  /* Sidebar - dark theme */
+  --sidebar: #0f1a24;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #1e3648;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(255, 255, 255, 0.08);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #1e3648;
+
+  /* Radius */
+  --radius: 0.5rem;
+}
+
+/* Keep dark mode for potential future use */
+.dark {
+  --background: #0f1a24;
+  --foreground: #ffffff;
+  --card: #1e3648;
+  --card-foreground: #ffffff;
+  --popover: #1e3648;
+  --popover-foreground: #ffffff;
+  --primary: #1e3648;
+  --primary-foreground: #ffffff;
+  --secondary: #64748b;
+  --secondary-foreground: #ffffff;
+  --muted: #0f1a24;
+  --muted-foreground: #94a3b8;
+  --accent: #1e3648;
+  --accent-foreground: #ffffff;
+  --destructive: #e11d48;
+  --destructive-foreground: #ffffff;
+  --border: #334155;
+  --input: #334155;
+  --ring: #1e3648;
+  --sidebar: #0f1a24;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #1e3648;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(255, 255, 255, 0.08);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #1e3648;
+}
+
+/* Base layer customization */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--foreground);
+    background: var(--background);
+    line-height: 1.5;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  input,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Tabular figures for numbers */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}

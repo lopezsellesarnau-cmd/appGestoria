@@ -113,11 +113,15 @@
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
     --radius: 0.5rem;
+    --font-display: "Geist", system-ui, sans-serif;
     --font-body: "Inter", system-ui, sans-serif;
     --font-heading: "Geist", system-ui, sans-serif;
     --color-primary: #1e3648;
     --color-primary-foreground: #ffffff;
     --color-sidebar-bg: #0f1a24;
+    --color-sidebar-foreground: #ffffff;
+    --color-sidebar-muted: #94a3b8;
+    --color-sidebar-active: #1e3648;
     --color-sidebar-hover: rgba(255, 255, 255, 0.08);
     --sidebar-width: 260px;
     --topbar-height: 60px;
@@ -336,15 +340,6 @@
   .z-\[100\] {
     z-index: 100;
   }
-  .col-start-2 {
-    grid-column-start: 2;
-  }
-  .row-span-2 {
-    grid-row: span 2 / span 2;
-  }
-  .row-start-1 {
-    grid-row-start: 1;
-  }
   .container {
     width: 100%;
     @media (width >= 40rem) {
@@ -363,17 +358,8 @@
       max-width: 96rem;
     }
   }
-  .-mx-1 {
-    margin-inline: calc(var(--spacing) * -1);
-  }
   .mx-4 {
     margin-inline: calc(var(--spacing) * 4);
-  }
-  .my-1 {
-    margin-block: calc(var(--spacing) * 1);
-  }
-  .mt-4 {
-    margin-top: calc(var(--spacing) * 4);
   }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
@@ -404,9 +390,6 @@
   }
   .table {
     display: table;
-  }
-  .table-caption {
-    display: table-caption;
   }
   .table-cell {
     display: table-cell;
@@ -463,9 +446,6 @@
   }
   .h-\[60px\] {
     height: 60px;
-  }
-  .h-px {
-    height: 1px;
   }
   .h-screen {
     height: 100vh;
@@ -526,9 +506,6 @@
   }
   .flex-1 {
     flex: 1;
-  }
-  .flex-shrink {
-    flex-shrink: 1;
   }
   .shrink-0 {
     flex-shrink: 0;
@@ -632,12 +609,6 @@
       margin-block-start: calc(calc(var(--spacing) * 6) * var(--tw-space-y-reverse));
       margin-block-end: calc(calc(var(--spacing) * 6) * calc(1 - var(--tw-space-y-reverse)));
     }
-  }
-  .self-start {
-    align-self: flex-start;
-  }
-  .justify-self-end {
-    justify-self: flex-end;
   }
   .truncate {
     overflow: hidden;

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { MainContent } from "@/components/layout/main-content";
 import { ProviderLedger } from "@/components/proveedores/provider-ledger";
+import { ProviderDetailActions } from "@/components/proveedores/provider-detail-actions";
 import { getProvider, getProviderExpenses, getCommunities } from "@/lib/db";
 
 interface ProviderLedgerPageProps {
@@ -32,6 +33,18 @@ export default async function ProviderLedgerPage({
 
 	return (
 		<MainContent title={`Mayor de ${provider.businessName}`}>
+			<div className="mb-4 flex justify-end">
+				<ProviderDetailActions
+					provider={{
+						id: provider.id,
+						businessName: provider.businessName,
+						taxId: provider.taxId,
+						communityId: provider.communityId,
+						isActive: provider.isActive,
+					}}
+					communities={communities.map((c) => ({ id: c.id, name: c.name }))}
+				/>
+			</div>
 			<ProviderLedger
 				provider={provider}
 				expenses={providerExpenses}

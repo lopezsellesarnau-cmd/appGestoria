@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { Receipt } from "@/types/recibos";
 import { StatusChip } from "./status-chip";
+import { ReceiptFormDialog } from "./receipt-form-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
+import { deleteReceipt } from "@/app/recibos/actions";
 import { formatCentsToEuros, formatDate } from "@/lib/utils";
 import {
   Table,
@@ -15,12 +18,14 @@ interface ReceiptTableProps {
   receipts: Receipt[];
   ownerNames: Record<string, string>;
   communityNames: Record<string, string>;
+  ownerOptions: { id: string; displayName: string }[];
 }
 
 export function ReceiptTable({
   receipts,
   ownerNames,
   communityNames,
+  ownerOptions,
 }: ReceiptTableProps) {
   if (receipts.length === 0) {
     return (
@@ -70,6 +75,9 @@ export function ReceiptTable({
             </TableHead>
             <TableHead className="font-heading font-semibold uppercase text-xs tracking-wider h-11">
               Estado
+            </TableHead>
+            <TableHead className="font-heading text-right font-semibold uppercase text-xs tracking-wider h-11">
+              Acciones
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -122,6 +130,30 @@ export function ReceiptTable({
               </TableCell>
               <TableCell className="py-3">
                 <StatusChip status={receipt.status} />
+              </TableCell>
+              <TableCell className="py-3">
+                <div className="flex items-center justify-end gap-1">
+                  <ReceiptFormDialog
+                    owners={ownerOptions}
+                    receipt={{
+                      id: receipt.id,
+                      receiptNumber: receipt.receiptNumber,
+                      type: receipt.type,
+                      ownerId: receipt.ownerId,
+                      issueDate: receipt.issueDate,
+                      dueDate: receipt.dueDate,
+                      periodLabel: receipt.periodLabel,
+                      concept: receipt.concept,
+                      amountCents: receipt.amountCents,
+                      status: receipt.status,
+                    }}
+                  />
+                  <ConfirmDeleteDialog
+                    title="Borrar recibo"
+                    name={receipt.receiptNumber}
+                    onConfirm={() => deleteReceipt(receipt.id)}
+                  />
+                </div>
               </TableCell>
             </TableRow>
           ))}

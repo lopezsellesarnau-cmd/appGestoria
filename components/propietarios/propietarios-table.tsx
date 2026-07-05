@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/table";
 import { Search } from "lucide-react";
 import { formatCentsToEuros } from "@/lib/utils";
+import { OwnerFormDialog } from "./owner-form-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
+import { deleteOwner } from "@/app/propietarios/actions";
 
 type StatusFilter = "all" | "has-debt" | "ok";
 
@@ -34,6 +37,7 @@ export interface OwnerRow {
   id: string;
   displayName: string;
   unitReference: string;
+  communityId: string;
   communityName: string;
   pendingCount: number;
   totalDebt: number;
@@ -42,9 +46,10 @@ export interface OwnerRow {
 
 interface PropietariosTableProps {
   rows: OwnerRow[];
+  communities: { id: string; name: string }[];
 }
 
-export function PropietariosTable({ rows }: PropietariosTableProps) {
+export function PropietariosTable({ rows, communities }: PropietariosTableProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [statusDisplay, setStatusDisplay] = useState("Todos");
@@ -96,6 +101,9 @@ export function PropietariosTable({ rows }: PropietariosTableProps) {
             ))}
           </SelectContent>
         </Select>
+        <div className="ml-auto">
+          <OwnerFormDialog communities={communities} />
+        </div>
       </div>
 
       <div
@@ -123,12 +131,15 @@ export function PropietariosTable({ rows }: PropietariosTableProps) {
               <TableHead className="font-heading text-right font-semibold uppercase text-xs tracking-wider h-11">
                 Deuda total
               </TableHead>
+              <TableHead className="font-heading text-right font-semibold uppercase text-xs tracking-wider h-11">
+                Acciones
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                   No hay propietarios registrados.
                 </TableCell>
               </TableRow>
@@ -161,6 +172,24 @@ export function PropietariosTable({ rows }: PropietariosTableProps) {
                     <span style={{ color: owner.hasDebt ? "#e11d48" : "#0d9488" }}>
                       {formatCentsToEuros(owner.totalDebt)}
                     </span>
+                  </TableCell>
+                  <TableCell className="py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      <OwnerFormDialog
+                        communities={communities}
+                        owner={{
+                          id: owner.id,
+                          displayName: owner.displayName,
+                          unitReference: owner.unitReference,
+                          communityId: owner.communityId,
+                        }}
+                      />
+                      <ConfirmDeleteDialog
+                        title="Borrar propietario"
+                        name={owner.displayName}
+                        onConfirm={() => deleteOwner(owner.id)}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

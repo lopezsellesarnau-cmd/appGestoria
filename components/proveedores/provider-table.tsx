@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ProviderExpense, CATEGORY_LABELS } from "@/types/proveedores";
 import { ExpenseStatusChip } from "./expense-status-chip";
+import { ExpenseFormDialog } from "./expense-form-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
+import { deleteExpense } from "@/app/proveedores/expense-actions";
 import { formatCentsToEuros, formatDate } from "@/lib/utils";
 import {
   Table,
@@ -15,12 +18,16 @@ interface ProviderTableProps {
   expenses: ProviderExpense[];
   providerNames: Record<string, string>;
   communityNames: Record<string, string>;
+  providerOptions: { id: string; businessName: string }[];
+  communityOptions: { id: string; name: string }[];
 }
 
 export function ProviderTable({
   expenses,
   providerNames,
   communityNames,
+  providerOptions,
+  communityOptions,
 }: ProviderTableProps) {
   if (expenses.length === 0) {
     return (
@@ -71,6 +78,9 @@ export function ProviderTable({
             <TableHead className="font-heading font-semibold uppercase text-xs tracking-wider h-11">
               Estado
             </TableHead>
+            <TableHead className="font-heading text-right font-semibold uppercase text-xs tracking-wider h-11">
+              Acciones
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -112,6 +122,31 @@ export function ProviderTable({
               </TableCell>
               <TableCell className="py-3">
                 <ExpenseStatusChip status={expense.paymentStatus} />
+              </TableCell>
+              <TableCell className="py-3">
+                <div className="flex items-center justify-end gap-1">
+                  <ExpenseFormDialog
+                    providers={providerOptions}
+                    communities={communityOptions}
+                    expense={{
+                      id: expense.id,
+                      providerId: expense.providerId,
+                      communityId: expense.communityId,
+                      issueDate: expense.issueDate,
+                      dueDate: expense.dueDate,
+                      concept: expense.concept,
+                      amountCents: expense.amountCents,
+                      paymentStatus: expense.paymentStatus,
+                      category: expense.category,
+                      invoiceNumber: expense.invoiceNumber,
+                    }}
+                  />
+                  <ConfirmDeleteDialog
+                    title="Borrar gasto"
+                    name={expense.concept}
+                    onConfirm={() => deleteExpense(expense.id)}
+                  />
+                </div>
               </TableCell>
             </TableRow>
           ))}

@@ -6,6 +6,7 @@ import { Community } from "@/types/comunidades";
 import { Owner } from "@/types/propietarios";
 import { ReceiptFilters, ReceiptFiltersState } from "./receipt-filters";
 import { ReceiptTable } from "./receipt-table";
+import { ReceiptFormDialog } from "./receipt-form-dialog";
 import { generateCSV, downloadCSV } from "@/lib/csv/export";
 
 const DEFAULT_FILTERS: ReceiptFiltersState = {
@@ -122,22 +123,28 @@ export function ReceiptWorkspace({
     downloadCSV(csv, `recibos-${new Date().toISOString().split("T")[0]}`);
   };
 
+  const ownerOptions = propietarios.map((o) => ({
+    id: o.id,
+    displayName: o.displayName,
+  }));
+
   return (
     <div className="flex flex-col">
+      <div className="mb-4 flex items-center justify-end">
+        <ReceiptFormDialog owners={ownerOptions} />
+      </div>
       <ReceiptFilters
         filters={filters}
         onFilterChange={setFilters}
         communityOptions={comunidades.map((c) => ({ id: c.id, name: c.name }))}
-        ownerOptions={propietarios.map((o) => ({
-          id: o.id,
-          displayName: o.displayName,
-        }))}
+        ownerOptions={ownerOptions}
         onExportCSV={handleExportCSV}
       />
       <ReceiptTable
         receipts={filteredReceipts}
         ownerNames={ownerNameMap}
         communityNames={communityNameMap}
+        ownerOptions={ownerOptions}
       />
     </div>
   );

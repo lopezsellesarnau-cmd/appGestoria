@@ -18,6 +18,7 @@ export default async function PropietariosPage() {
       id: owner.id,
       displayName: owner.displayName,
       unitReference: owner.unitReference,
+      communityId: owner.communityId,
       communityName: communityNameMap[owner.communityId] ?? owner.communityId,
       pendingCount: ownerPending.length,
       totalDebt,
@@ -25,9 +26,11 @@ export default async function PropietariosPage() {
     };
   });
 
+  const communityOptions = communities.map((c) => ({ id: c.id, name: c.name }));
+
   return (
     <MainContent title="Propietarios">
-      <PropietariosTable rows={rows} />
+      <PropietariosTable rows={rows} communities={communityOptions} />
     </MainContent>
   );
 }

@@ -20,6 +20,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Search } from "lucide-react";
+import { CommunityFormDialog } from "./community-form-dialog";
+import { DeleteCommunityDialog } from "./delete-community-dialog";
 
 type StatusFilter = "all" | "has-pending" | "ok";
 
@@ -90,6 +92,9 @@ export function ComunidadesTable({ rows }: ComunidadesTableProps) {
             ))}
           </SelectContent>
         </Select>
+        <div className="ml-auto">
+          <CommunityFormDialog />
+        </div>
       </div>
 
       <div
@@ -114,12 +119,15 @@ export function ComunidadesTable({ rows }: ComunidadesTableProps) {
               <TableHead className="font-heading text-center font-semibold uppercase text-xs tracking-wider h-11">
                 Estado
               </TableHead>
+              <TableHead className="font-heading text-right font-semibold uppercase text-xs tracking-wider h-11">
+                Acciones
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
                   No hay comunidades registradas.
                 </TableCell>
               </TableRow>
@@ -145,6 +153,18 @@ export function ComunidadesTable({ rows }: ComunidadesTableProps) {
                     <Badge variant={c.hasPending ? "warning" : "success"}>
                       {c.hasPending ? "Pendiente" : "Al día"}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      <CommunityFormDialog
+                        community={{
+                          id: c.id,
+                          name: c.name,
+                          municipality: c.municipality,
+                        }}
+                      />
+                      <DeleteCommunityDialog id={c.id} name={c.name} />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MainContent } from "@/components/layout/main-content";
-import { COMUNIDADES } from "@/data/comunidades";
-import { PROPIETARIOS } from "@/data/propietarios";
-import { RECIBOS } from "@/data/recibos";
+import { getCommunity, getOwners, getReceipts } from "@/lib/db";
 import { formatCentsToEuros } from "@/lib/utils";
 import styles from "./community-detail.module.css";
 
@@ -11,27 +9,19 @@ interface CommunityDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function CommunityDetailPage({
-  params,
-}: CommunityDetailPageProps) {
+export default async function CommunityDetailPage({ params }: CommunityDetailPageProps) {
   const { id } = await params;
-  const community = COMUNIDADES.find((c) => c.id === id);
 
-  if (!community) {
-    notFound();
-  }
+  const [community, owners, receipts] = await Promise.all([
+    getCommunity(id),
+    getOwners(id),
+    getReceipts({ communityId: id }),
+  ]);
 
-  const communityOwners = PROPIETARIOS.filter(
-    (p) => p.communityId === community.id
-  );
-  const communityReceipts = RECIBOS.filter(
-    (r) => r.communityId === community.id
-  );
-  const pendingReceipts = communityReceipts.filter((r) => r.status !== "paid");
-  const totalPendingDebt = pendingReceipts.reduce(
-    (sum, r) => sum + r.amountCents,
-    0
-  );
+  if (!community) notFound();
+
+  const pendingReceipts = receipts.filter((r) => r.status !== "paid");
+  const totalPendingDebt = pendingReceipts.reduce((sum, r) => sum + r.amountCents, 0);
 
   return (
     <MainContent title={community.name}>
@@ -41,7 +31,7 @@ export default async function CommunityDetailPage({
             <span className={styles.label}>Municipio:</span> {community.municipality}
           </p>
           <p className={styles.stats}>
-            <span className={styles.label}>Propietarios:</span> {communityOwners.length} |{" "}
+            <span className={styles.label}>Propietarios:</span> {owners.length} |{" "}
             <span className={styles.label}>Recibos pendientes:</span> {pendingReceipts.length} |{" "}
             <span className={styles.label}>Deuda total:</span>{" "}
             {formatCentsToEuros(totalPendingDebt)}
@@ -54,7 +44,7 @@ export default async function CommunityDetailPage({
 
       <h2 className={styles.sectionTitle}>Propietarios</h2>
       <div className={styles.tableWrapper}>
-        {communityOwners.length === 0 ? (
+        {owners.length === 0 ? (
           <div className={styles.emptyState}>
             <p>No hay propietarios en esta comunidad.</p>
           </div>
@@ -69,28 +59,15 @@ export default async function CommunityDetailPage({
               </tr>
             </thead>
             <tbody>
-              {communityOwners.map((owner, index) => {
-                const ownerReceipts = communityReceipts.filter(
-                  (r) => r.ownerId === owner.id
+              {owners.map((owner, index) => {
+                const ownerPending = receipts.filter(
+                  (r) => r.ownerId === owner.id && r.status !== "paid",
                 );
-                const ownerPending = ownerReceipts.filter(
-                  (r) => r.status !== "paid"
-                );
-                const ownerDebt = ownerPending.reduce(
-                  (sum, r) => sum + r.amountCents,
-                  0
-                );
-
+                const ownerDebt = ownerPending.reduce((sum, r) => sum + r.amountCents, 0);
                 return (
-                  <tr
-                    key={owner.id}
-                    className={index % 2 === 1 ? styles.zebra : ""}
-                  >
+                  <tr key={owner.id} className={index % 2 === 1 ? styles.zebra : ""}>
                     <td>
-                      <Link
-                        href={`/propietarios/${owner.id}/mayor`}
-                        className={styles.ownerLink}
-                      >
+                      <Link href={`/propietarios/${owner.id}/mayor`} className={styles.ownerLink}>
                         {owner.displayName}
                       </Link>
                     </td>

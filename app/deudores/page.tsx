@@ -1,17 +1,21 @@
 import { MainContent } from "@/components/layout/main-content";
 import { DebtorWorkspace } from "@/components/deudores/debtor-workspace";
-import { PROPIETARIOS } from "@/data/propietarios";
-import { RECIBOS } from "@/data/recibos";
-import { COMUNIDADES } from "@/data/comunidades";
+import { getCommunities, getOwners, getReceipts } from "@/lib/db";
 
-export default function DeudoresPage() {
-	return (
-		<MainContent title="Deudores">
-			<DebtorWorkspace
-				owners={PROPIETARIOS}
-				receipts={RECIBOS}
-				communities={COMUNIDADES}
-			/>
-		</MainContent>
-	);
+export default async function DeudoresPage() {
+  const [owners, receipts, communities] = await Promise.all([
+    getOwners(),
+    getReceipts({ statusIn: ['pending', 'claimed', 'judicial'] }),
+    getCommunities(),
+  ]);
+
+  return (
+    <MainContent title="Deudores">
+      <DebtorWorkspace
+        owners={owners}
+        receipts={receipts}
+        communities={communities}
+      />
+    </MainContent>
+  );
 }

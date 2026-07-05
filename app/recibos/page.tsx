@@ -1,16 +1,20 @@
 import { MainContent } from '@/components/layout/main-content';
 import { ReceiptWorkspace } from '@/components/recibos/receipt-workspace';
-import { RECIBOS } from '@/data/recibos';
-import { COMUNIDADES } from '@/data/comunidades';
-import { PROPIETARIOS } from '@/data/propietarios';
+import { getCommunities, getOwners, getReceipts } from '@/lib/db';
 
-export default function RecibosPage() {
+export default async function RecibosPage() {
+  const [receipts, comunidades, propietarios] = await Promise.all([
+    getReceipts(),
+    getCommunities(),
+    getOwners(),
+  ]);
+
   return (
     <MainContent title="Recibos">
       <ReceiptWorkspace
-        receipts={RECIBOS}
-        comunidades={COMUNIDADES}
-        propietarios={PROPIETARIOS}
+        receipts={receipts}
+        comunidades={comunidades}
+        propietarios={propietarios}
       />
     </MainContent>
   );

@@ -1,17 +1,21 @@
 import { MainContent } from "@/components/layout/main-content";
 import { ProviderWorkspace } from "@/components/proveedores/provider-workspace";
-import { PROVEEDORES } from "@/data/proveedores";
-import { GASTOS } from "@/data/proveedores";
-import { COMUNIDADES } from "@/data/comunidades";
+import { getCommunities, getProviders, getProviderExpenses } from "@/lib/db";
 
-export default function ProveedoresPage() {
-	return (
-		<MainContent title="Proveedores">
-			<ProviderWorkspace
-				providers={PROVEEDORES}
-				expenses={GASTOS}
-				communities={COMUNIDADES}
-			/>
-		</MainContent>
-	);
+export default async function ProveedoresPage() {
+  const [providers, expenses, communities] = await Promise.all([
+    getProviders(),
+    getProviderExpenses(),
+    getCommunities(),
+  ]);
+
+  return (
+    <MainContent title="Proveedores">
+      <ProviderWorkspace
+        providers={providers}
+        expenses={expenses}
+        communities={communities}
+      />
+    </MainContent>
+  );
 }

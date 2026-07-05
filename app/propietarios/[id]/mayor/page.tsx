@@ -1,9 +1,7 @@
 import { notFound } from 'next/navigation';
 import { MainContent } from '@/components/layout/main-content';
 import { OwnerLedger } from '@/components/recibos/owner-ledger';
-import { PROPIETARIOS } from '@/data/propietarios';
-import { COMUNIDADES } from '@/data/comunidades';
-import { RECIBOS } from '@/data/recibos';
+import { getOwner, getCommunity, getReceipts } from '@/lib/db';
 
 interface OwnerLedgerPageProps {
   params: Promise<{ id: string }>;
@@ -11,22 +9,18 @@ interface OwnerLedgerPageProps {
 
 export default async function OwnerLedgerPage({ params }: OwnerLedgerPageProps) {
   const { id } = await params;
-  const owner = PROPIETARIOS.find((p) => p.id === id);
 
-  if (!owner) {
-    notFound();
-  }
+  const owner = await getOwner(id);
+  if (!owner) notFound();
 
-  const community = COMUNIDADES.find((c) => c.id === owner.communityId);
-  const ownerReceipts = RECIBOS.filter((r) => r.ownerId === id);
+  const [community, receipts] = await Promise.all([
+    getCommunity(owner.communityId),
+    getReceipts({ ownerId: id }),
+  ]);
 
   return (
     <MainContent title={`Mayor de ${owner.displayName}`}>
-      <OwnerLedger
-        owner={owner}
-        community={community}
-        receipts={ownerReceipts}
-      />
+      <OwnerLedger owner={owner} community={community ?? undefined} receipts={receipts} />
     </MainContent>
   );
 }

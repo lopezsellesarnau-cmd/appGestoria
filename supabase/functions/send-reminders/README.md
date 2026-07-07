@@ -1,5 +1,13 @@
 # Scheduler de recordatorios (`send-reminders`)
 
+> **Nota de despliegue actual:** en producción la función se desplegó vía el
+> editor del dashboard con el nombre autogenerado **`rapid-function`** y con
+> **"Verify JWT" desactivado** (la invoca solo el cron interno). El cron y las
+> llamadas `net.http_post` apuntan por tanto a
+> `/functions/v1/rapid-function` **sin** cabecera `Authorization`.
+> Si algún día se redespliega por CLI, conviene renombrarla a `send-reminders`
+> para que cuadre con este repo y actualizar la URL del cron.
+
 Edge Function que, a diario, envía recordatorios por email (Brevo) de los
 seguimientos en estado `pending` cuyo umbral de días se ha superado, y marca
 como `overdue` los que ya acumulan 3 recordatorios sin respuesta.

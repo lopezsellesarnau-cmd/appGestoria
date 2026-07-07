@@ -3,6 +3,13 @@ import type { Community } from '@/types/comunidades'
 import type { Owner } from '@/types/propietarios'
 import type { Provider, ProviderExpense } from '@/types/proveedores'
 import type { Receipt } from '@/types/recibos'
+import type { Contact } from '@/types/contactos'
+import type {
+  Tracking,
+  TrackingType,
+  TrackingEvent,
+  SentEmail,
+} from '@/types/incidencias'
 
 // ---- Communities ----
 
@@ -159,5 +166,152 @@ export async function getProviderExpenses(filters?: {
     paymentStatus: r.payment_status,
     category: r.category,
     invoiceNumber: r.invoice_number ?? undefined,
+  }))
+}
+
+// ---- Contacts ----
+
+function mapContact(r: {
+  id: string
+  name: string
+  email: string
+  type: Contact['type']
+  community_id: string | null
+  provider_id: string | null
+}): Contact {
+  return {
+    id: r.id,
+    name: r.name,
+    email: r.email,
+    type: r.type,
+    communityId: r.community_id,
+    providerId: r.provider_id,
+  }
+}
+
+export async function getContacts(): Promise<Contact[]> {
+  const sb = createClient()
+  const { data, error } = await sb
+    .from('contacts')
+    .select('id, name, email, type, community_id, provider_id')
+    .order('name')
+  if (error) throw error
+  return data.map(mapContact)
+}
+
+export async function getContact(id: string): Promise<Contact | null> {
+  const sb = createClient()
+  const { data, error } = await sb
+    .from('contacts')
+    .select('id, name, email, type, community_id, provider_id')
+    .eq('id', id)
+    .single()
+  if (error) return null
+  return mapContact(data)
+}
+
+// ---- Tracking types ----
+
+export async function getTrackingTypes(): Promise<TrackingType[]> {
+  const sb = createClient()
+  const { data, error } = await sb
+    .from('tracking_types')
+    .select('id, name, slug, threshold_days')
+    .order('name')
+  if (error) throw error
+  return data.map((r) => ({
+    id: r.id,
+    name: r.name,
+    slug: r.slug,
+    thresholdDays: r.threshold_days,
+  }))
+}
+
+// ---- Trackings ----
+
+const TRACKING_COLS =
+  'id, external_ref, tracking_type_id, contact_id, community_id, status, last_response_at, reminder_count, notes, created_at, updated_at'
+
+function mapTracking(r: Record<string, any>): Tracking {
+  return {
+    id: r.id,
+    externalRef: r.external_ref,
+    trackingTypeId: r.tracking_type_id,
+    contactId: r.contact_id,
+    communityId: r.community_id,
+    status: r.status,
+    lastResponseAt: r.last_response_at,
+    reminderCount: r.reminder_count,
+    notes: r.notes,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+  }
+}
+
+export async function getTrackings(filters?: {
+  communityId?: string
+  trackingTypeId?: string
+  status?: string
+}): Promise<Tracking[]> {
+  const sb = createClient()
+  let query = sb
+    .from('trackings')
+    .select(TRACKING_COLS)
+    .order('created_at', { ascending: false })
+  if (filters?.communityId) query = query.eq('community_id', filters.communityId)
+  if (filters?.trackingTypeId)
+    query = query.eq('tracking_type_id', filters.trackingTypeId)
+  if (filters?.status) query = query.eq('status', filters.status)
+  const { data, error } = await query
+  if (error) throw error
+  return data.map(mapTracking)
+}
+
+export async function getTracking(id: string): Promise<Tracking | null> {
+  const sb = createClient()
+  const { data, error } = await sb
+    .from('trackings')
+    .select(TRACKING_COLS)
+    .eq('id', id)
+    .single()
+  if (error) return null
+  return mapTracking(data)
+}
+
+export async function getTrackingEvents(
+  trackingId: string,
+): Promise<TrackingEvent[]> {
+  const sb = createClient()
+  const { data, error } = await sb
+    .from('tracking_events')
+    .select('id, tracking_id, event_type, description, created_at')
+    .eq('tracking_id', trackingId)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data.map((r) => ({
+    id: r.id,
+    trackingId: r.tracking_id,
+    eventType: r.event_type,
+    description: r.description,
+    createdAt: r.created_at,
+  }))
+}
+
+export async function getSentEmails(trackingId: string): Promise<SentEmail[]> {
+  const sb = createClient()
+  const { data, error } = await sb
+    .from('sent_emails')
+    .select('id, tracking_id, to_email, subject, status, sent_at, error_message')
+    .eq('tracking_id', trackingId)
+    .order('sent_at', { ascending: false })
+  if (error) throw error
+  return data.map((r) => ({
+    id: r.id,
+    trackingId: r.tracking_id,
+    toEmail: r.to_email,
+    subject: r.subject,
+    status: r.status,
+    sentAt: r.sent_at,
+    errorMessage: r.error_message,
   }))
 }

@@ -35,7 +35,7 @@ export default function LoginPage() {
         >
           Fincas Pro
         </h1>
-        <p className="mb-6 text-sm" style={{ color: "#5a5a6e" }}>
+        <p className="mb-6 text-sm text-destructive" style={{ color: "#5a5a6e" }}>
           Accede con tu cuenta de administración.
         </p>
 
@@ -79,7 +79,7 @@ export default function LoginPage() {
           </div>
 
           {state?.error && (
-            <p className="text-sm" style={{ color: "#c0392b" }}>
+            <p className="text-sm text-destructive">
               {state.error}
             </p>
           )}

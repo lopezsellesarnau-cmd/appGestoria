@@ -7,12 +7,7 @@ export function MainContent({ children, title }: MainContentProps) {
   return (
     <div className="space-y-6">
       {title && (
-        <h1
-          className="text-2xl font-heading font-semibold tracking-tight"
-          style={{
-            color: "#1a1a2e",
-          }}
-        >
+        <h1 className="text-2xl font-heading font-semibold tracking-tight text-foreground">
           {title}
         </h1>
       )}

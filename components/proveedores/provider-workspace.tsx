@@ -68,7 +68,7 @@ export function ProviderWorkspace({
 
 	return (
 		<div className="flex flex-col">
-			<div className="mb-4 flex items-center justify-end gap-2">
+			<div className="mb-5 flex flex-wrap items-center justify-end gap-3">
 				<ProviderFormDialog communities={communityOptions} />
 				<ExpenseFormDialog
 					providers={providerOptions}

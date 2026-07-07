@@ -72,7 +72,7 @@ export function ProviderFormDialog({
           Editar
         </Button>
       ) : (
-        <Button onClick={() => setOpen(true)}>
+        <Button variant="outline" onClick={() => setOpen(true)}>
           <Plus className="h-4 w-4" />
           Nuevo proveedor
         </Button>
@@ -141,7 +141,7 @@ export function ProviderFormDialog({
           </label>
 
           {state && !state.ok && (
-            <p className="text-sm" style={{ color: "#c0392b" }}>
+            <p className="text-sm text-destructive">
               {state.error}
             </p>
           )}

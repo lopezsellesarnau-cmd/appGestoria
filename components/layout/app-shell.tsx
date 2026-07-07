@@ -13,13 +13,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div
+      className="flex min-h-screen gap-3 p-3"
+      style={{ backgroundColor: "#f0f0f0" }}
+    >
       <Sidebar />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-1 flex-col gap-3 min-w-0">
         <Topbar />
-        <main className="flex-1 p-6 lg:p-8" style={{ backgroundColor: "#f8f7f4" }}>
-          {children}
-        </main>
+        <main className="flex-1 pb-3">{children}</main>
       </div>
     </div>
   );

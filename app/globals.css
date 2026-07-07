@@ -18,8 +18,8 @@
   --color-sidebar-bg: #0f1a24;
   --color-sidebar-foreground: #ffffff;
   --color-sidebar-muted: #94a3b8;
-  --color-sidebar-active: #1e3648;
-  --color-sidebar-hover: rgba(255, 255, 255, 0.08);
+  --color-sidebar-active: rgba(255, 255, 255, 0.12);
+  --color-sidebar-hover: rgba(255, 255, 255, 0.06);
 
   /* Spacing and sizing */
   --sidebar-width: 260px;
@@ -72,7 +72,7 @@
   --chart-4: #e11d48;
   --chart-5: #64748b;
 
-  /* Sidebar - dark theme */
+  /* Sidebar - dark pill */
   --sidebar: #0f1a24;
   --sidebar-foreground: #ffffff;
   --sidebar-primary: #1e3648;

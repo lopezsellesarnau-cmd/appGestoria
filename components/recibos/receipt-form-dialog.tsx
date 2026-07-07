@@ -238,7 +238,7 @@ export function ReceiptFormDialog({ owners, receipt }: ReceiptFormDialogProps) {
           </div>
 
           {state && !state.ok && (
-            <p className="text-sm" style={{ color: "#c0392b" }}>
+            <p className="text-sm text-destructive">
               {state.error}
             </p>
           )}

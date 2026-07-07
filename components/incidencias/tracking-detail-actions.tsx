@@ -153,7 +153,7 @@ export function TrackingDetailActions({
       </div>
 
       {error && (
-        <p className="text-sm" style={{ color: "#c0392b" }}>
+        <p className="text-sm text-destructive">
           {error}
         </p>
       )}

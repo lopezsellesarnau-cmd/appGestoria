@@ -4,13 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormSelect } from "@/components/ui/form-select";
 import {
   Table,
   TableBody,
@@ -47,7 +41,6 @@ interface ComunidadesTableProps {
 export function ComunidadesTable({ rows }: ComunidadesTableProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [statusDisplay, setStatusDisplay] = useState("Todos");
 
   const filtered = rows.filter((c) => {
     if (search) {
@@ -74,24 +67,17 @@ export function ComunidadesTable({ rows }: ComunidadesTableProps) {
             className="pl-9"
           />
         </div>
-        <Select
+        <FormSelect
           value={statusFilter}
-          onValueChange={(val) => {
-            setStatusFilter(val as StatusFilter);
-            setStatusDisplay(STATUS_OPTIONS.find((o) => o.value === val)?.label ?? "Estado");
-          }}
+          onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+          className="w-[180px]"
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue>{statusDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {STATUS_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {STATUS_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </FormSelect>
         <div className="ml-auto">
           <CommunityFormDialog />
         </div>

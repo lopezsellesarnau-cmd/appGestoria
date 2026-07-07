@@ -13,13 +13,7 @@ import { ExpenseStatusChip } from "./expense-status-chip";
 import { filterExpenses } from "@/lib/proveedores/filter-logic";
 import { ProviderFiltersState } from "./provider-filters";
 import { formatCentsToEuros, formatDate } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import styles from "./provider-ledger.module.css";
 
@@ -115,24 +109,18 @@ export function ProviderLedger({
           <label className="text-xs font-medium text-muted-foreground">
             Comunidad
           </label>
-          <Select
+          <FormSelect
             value={filters.communityId}
-            onValueChange={(value) =>
-              handleFilterChange("communityId", value ?? "")
-            }
+            onChange={(e) => handleFilterChange("communityId", e.target.value)}
+            className="w-[180px]"
           >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue>{communityDisplay}</SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">Todas</SelectItem>
-              {communityOptions.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <option value="">Todas</option>
+            {communityOptions.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </FormSelect>
         </div>
 
         {/* Category Filter */}
@@ -140,26 +128,22 @@ export function ProviderLedger({
           <label className="text-xs font-medium text-muted-foreground">
             Categoría
           </label>
-          <Select
+          <FormSelect
             value={filters.category}
-            onValueChange={(value) =>
+            onChange={(e) =>
               handleFilterChange(
                 "category",
-                (value ?? "all") as ProviderFiltersState["category"],
+                e.target.value as ProviderFiltersState["category"],
               )
             }
+            className="w-[160px]"
           >
-            <SelectTrigger className="w-[160px]">
-              <SelectValue>{categoryDisplay}</SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORY_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </FormSelect>
         </div>
 
         {/* Status Filter */}
@@ -167,26 +151,22 @@ export function ProviderLedger({
           <label className="text-xs font-medium text-muted-foreground">
             Estado
           </label>
-          <Select
+          <FormSelect
             value={filters.status}
-            onValueChange={(value) =>
+            onChange={(e) =>
               handleFilterChange(
                 "status",
-                (value ?? "all") as ProviderFiltersState["status"],
+                e.target.value as ProviderFiltersState["status"],
               )
             }
+            className="w-[140px]"
           >
-            <SelectTrigger className="w-[140px]">
-              <SelectValue>{statusDisplay}</SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {STATUS_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {STATUS_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </FormSelect>
         </div>
 
         {/* Date From */}

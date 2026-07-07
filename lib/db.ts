@@ -210,6 +210,74 @@ export async function getContact(id: string): Promise<Contact | null> {
   return mapContact(data)
 }
 
+// ---- Global search ----
+
+export interface SearchResults {
+  communities: { id: string; name: string; municipality: string }[]
+  owners: { id: string; displayName: string; unitReference: string }[]
+  providers: { id: string; businessName: string }[]
+  receipts: { id: string; receiptNumber: string; concept: string; ownerId: string }[]
+}
+
+export async function search(query: string): Promise<SearchResults> {
+  const q = query.trim()
+  if (!q) {
+    return { communities: [], owners: [], providers: [], receipts: [] }
+  }
+  const sb = createClient()
+  const like = `%${q}%`
+
+  const [communities, owners, providers, receipts] = await Promise.all([
+    sb
+      .from('communities')
+      .select('id, name, municipality')
+      .or(`name.ilike.${like},municipality.ilike.${like}`)
+      .order('name')
+      .limit(8),
+    sb
+      .from('owners')
+      .select('id, display_name, unit_reference')
+      .or(`display_name.ilike.${like},unit_reference.ilike.${like}`)
+      .order('display_name')
+      .limit(8),
+    sb
+      .from('providers')
+      .select('id, business_name')
+      .or(`business_name.ilike.${like},tax_id.ilike.${like}`)
+      .order('business_name')
+      .limit(8),
+    sb
+      .from('receipts')
+      .select('id, receipt_number, concept, owner_id')
+      .or(`receipt_number.ilike.${like},concept.ilike.${like}`)
+      .order('issue_date', { ascending: false })
+      .limit(8),
+  ])
+
+  return {
+    communities: (communities.data ?? []).map((r) => ({
+      id: r.id,
+      name: r.name,
+      municipality: r.municipality,
+    })),
+    owners: (owners.data ?? []).map((r) => ({
+      id: r.id,
+      displayName: r.display_name,
+      unitReference: r.unit_reference,
+    })),
+    providers: (providers.data ?? []).map((r) => ({
+      id: r.id,
+      businessName: r.business_name,
+    })),
+    receipts: (receipts.data ?? []).map((r) => ({
+      id: r.id,
+      receiptNumber: r.receipt_number,
+      concept: r.concept,
+      ownerId: r.owner_id,
+    })),
+  }
+}
+
 // ---- Tracking types ----
 
 export async function getTrackingTypes(): Promise<TrackingType[]> {

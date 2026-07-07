@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import { FormSelect } from "@/components/ui/form-select";
 import { Button } from "@/components/ui/button";
 
 export type DebtorFilterType = "all" | "judicial" | "no-judicial";
@@ -39,57 +33,47 @@ export function DebtorFilters({
 		onFilterChange({ ...filters, [field]: value });
 	};
 
-	const communityDisplay = filters.communityId
-		? communityOptions.find((c) => c.id === filters.communityId)?.name ?? "Comunidad"
-		: "Todas";
-	const typeDisplay = TYPE_OPTIONS.find((o) => o.value === filters.type)?.label ?? "Tipo";
-
 	return (
-		<div className="flex gap-4 items-end flex-wrap pb-4">
-			<div className="space-y-1.5">
+		<div
+			className="mb-4 flex flex-wrap items-end gap-4 rounded-lg border bg-white p-4"
+			style={{ borderColor: "var(--border)" }}
+		>
+			<div className="flex flex-col gap-1.5">
 				<label className="text-xs font-medium text-muted-foreground">Comunidad</label>
-				<Select
+				<FormSelect
 					value={filters.communityId}
-					onValueChange={(value) => handleChange("communityId", value ?? "")}
+					onChange={(e) => handleChange("communityId", e.target.value)}
+					className="w-[200px]"
 				>
-					<SelectTrigger className="w-[180px]">
-						<SelectValue>{communityDisplay}</SelectValue>
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="">Todas</SelectItem>
-						{communityOptions.map((c) => (
-							<SelectItem key={c.id} value={c.id}>
-								{c.name}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
+					<option value="">Todas</option>
+					{communityOptions.map((c) => (
+						<option key={c.id} value={c.id}>
+							{c.name}
+						</option>
+					))}
+				</FormSelect>
 			</div>
 
-			<div className="space-y-1.5">
+			<div className="flex flex-col gap-1.5">
 				<label className="text-xs font-medium text-muted-foreground">Tipo</label>
-				<Select
+				<FormSelect
 					value={filters.type}
-					onValueChange={(value) => handleChange("type", value ?? "all")}
+					onChange={(e) => handleChange("type", e.target.value)}
+					className="w-[220px]"
 				>
-					<SelectTrigger className="w-[200px]">
-						<SelectValue>{typeDisplay}</SelectValue>
-					</SelectTrigger>
-					<SelectContent>
-						{TYPE_OPTIONS.map((opt) => (
-							<SelectItem key={opt.value} value={opt.value}>
-								{opt.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
+					{TYPE_OPTIONS.map((opt) => (
+						<option key={opt.value} value={opt.value}>
+							{opt.label}
+						</option>
+					))}
+				</FormSelect>
 			</div>
 
-			<div className="flex-1" />
-
-			<Button variant="outline" onClick={onExportCSV}>
-				Exportar CSV
-			</Button>
+			<div className="ml-auto">
+				<Button variant="outline" onClick={onExportCSV}>
+					Exportar CSV
+				</Button>
+			</div>
 		</div>
 	);
 }

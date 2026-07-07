@@ -70,7 +70,7 @@ export function ProviderDetailActions({
             </AlertDialog.Description>
 
             {error && (
-              <p className="mt-3 text-sm" style={{ color: "#c0392b" }}>
+              <p className="mt-3 text-sm text-destructive">
                 {error}
               </p>
             )}

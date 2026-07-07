@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { LogOut, Search } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { logout } from "@/app/auth/actions";
 
 export function Topbar() {
+  const router = useRouter();
   const [email, setEmail] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const supabase = createClient();
@@ -15,25 +18,32 @@ export function Topbar() {
     });
   }, []);
 
+  function onSearchSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const q = query.trim();
+    if (q) router.push(`/buscar?q=${encodeURIComponent(q)}`);
+  }
+
   return (
     <header
-      className="sticky top-0 z-50 flex items-center justify-between px-8 h-[60px]"
-      style={{
-        backgroundColor: "#ffffff",
-        borderBottom: "1px solid var(--border)",
-      }}
+      className="sticky top-3 z-40 flex items-center justify-between px-6 h-16 rounded-[10px] border bg-white"
+      style={{ borderColor: "rgba(212,212,212,0.94)" }}
     >
       {/* Search */}
-      <div className="flex items-center gap-3 flex-1 max-w-md">
+      <form
+        onSubmit={onSearchSubmit}
+        className="flex items-center gap-3 flex-1 max-w-md"
+      >
         <Search className="w-4 h-4 shrink-0" style={{ color: "#5a5a6e" }} />
         <input
           type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Buscar comunidades, propietarios, recibos..."
           className="flex-1 bg-transparent py-2 text-sm outline-none"
           style={{ color: "#1a1a2e" }}
-          readOnly
         />
-      </div>
+      </form>
 
       {/* Actions */}
       <div className="flex items-center gap-4">

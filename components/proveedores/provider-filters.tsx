@@ -7,13 +7,7 @@ import {
   STATUS_OPTIONS,
 } from "@/types/proveedores";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormSelect } from "@/components/ui/form-select";
 
 export interface ProviderFiltersState {
   communityId: string;
@@ -41,116 +35,95 @@ export function ProviderFilters({
     onFilterChange({ ...filters, [field]: value });
   };
 
-  const categoryDisplay = CATEGORY_OPTIONS.find((o) => o.value === filters.category)?.label ?? "Categoría";
-  const statusDisplay = STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? "Estado";
-  const communityDisplay = filters.communityId
-    ? communityOptions.find((c) => c.id === filters.communityId)?.name ?? "Comunidad"
-    : "Todas";
-  const providerDisplay = filters.providerId
-    ? providerOptions.find((p) => p.id === filters.providerId)?.businessName ?? "Proveedor"
-    : "Todos";
-
   return (
-    <div className="flex gap-4 items-end flex-wrap pb-4">
-      {/* Community Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Comunidad</label>
-        <Select
+    <div
+      className="mb-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border bg-white p-4 sm:grid-cols-3 lg:grid-cols-6"
+      style={{ borderColor: "var(--border)" }}
+    >
+      <Field label="Comunidad">
+        <FormSelect
           value={filters.communityId}
-          onValueChange={(value) => handleChange("communityId", value ?? "")}
+          onChange={(e) => handleChange("communityId", e.target.value)}
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue>{communityDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
-            {communityOptions.map((c) => (
-              <SelectItem key={c.id} value={c.id}>
-                {c.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          <option value="">Todas</option>
+          {communityOptions.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </FormSelect>
+      </Field>
 
-      {/* Provider Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Proveedor</label>
-        <Select
+      <Field label="Proveedor">
+        <FormSelect
           value={filters.providerId}
-          onValueChange={(value) => handleChange("providerId", value ?? "")}
+          onChange={(e) => handleChange("providerId", e.target.value)}
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue>{providerDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
-            {providerOptions.map((p) => (
-              <SelectItem key={p.id} value={p.id}>
-                {p.businessName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          <option value="">Todos</option>
+          {providerOptions.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.businessName}
+            </option>
+          ))}
+        </FormSelect>
+      </Field>
 
-      {/* Category Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Categoría</label>
-        <Select
+      <Field label="Categoría">
+        <FormSelect
           value={filters.category}
-          onValueChange={(value) => handleChange("category", (value ?? "all") as ProviderExpenseCategory | "all")}
+          onChange={(e) => handleChange("category", e.target.value)}
         >
-          <SelectTrigger className="w-[160px]">
-            <SelectValue>{categoryDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {CATEGORY_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          {CATEGORY_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </FormSelect>
+      </Field>
 
-      {/* Status Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Estado</label>
-        <Select
+      <Field label="Estado">
+        <FormSelect
           value={filters.status}
-          onValueChange={(value) => handleChange("status", (value ?? "all") as ProviderExpenseStatus | "all")}
+          onChange={(e) => handleChange("status", e.target.value)}
         >
-          <SelectTrigger className="w-[140px]">
-            <SelectValue>{statusDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {STATUS_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          {STATUS_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </FormSelect>
+      </Field>
 
-      {/* Date From */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Desde</label>
+      <Field label="Desde">
         <Input
           type="date"
           value={filters.dateFrom}
           onChange={(e) => handleChange("dateFrom", e.target.value)}
-          className="w-[150px]"
         />
-      </div>
+      </Field>
 
-      {/* Date To */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Hasta</label>
+      <Field label="Hasta">
         <Input
           type="date"
           value={filters.dateTo}
           onChange={(e) => handleChange("dateTo", e.target.value)}
-          className="w-[150px]"
         />
-      </div>
+      </Field>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-muted-foreground">{label}</label>
+      {children}
     </div>
   );
 }

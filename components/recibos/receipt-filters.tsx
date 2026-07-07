@@ -3,13 +3,7 @@
 import { ReceiptType, ReceiptStatus } from "@/types/recibos";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormSelect } from "@/components/ui/form-select";
 
 export interface ReceiptFiltersState {
   type: ReceiptType | "all";
@@ -53,122 +47,103 @@ export function ReceiptFilters({
     onFilterChange({ ...filters, [field]: value });
   };
 
-  const typeDisplay = TYPE_OPTIONS.find((o) => o.value === filters.type)?.label ?? "Tipo";
-  const statusDisplay = STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? "Estado";
-  const communityDisplay = filters.communityId
-    ? communityOptions.find((c) => c.id === filters.communityId)?.name ?? "Comunidad"
-    : "Todas";
-  const ownerDisplay = filters.ownerId
-    ? ownerOptions.find((o) => o.id === filters.ownerId)?.displayName ?? "Propietario"
-    : "Todos";
-
   return (
-    <div className="flex gap-4 items-end flex-wrap pb-4">
-      {/* Type Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Tipo</label>
-        <Select
-          value={filters.type}
-          onValueChange={(value) => handleChange("type", (value ?? "all") as ReceiptType | "all")}
-        >
-          <SelectTrigger className="w-[160px]">
-            <SelectValue>{typeDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
+    <div
+      className="mb-4 rounded-lg border bg-white p-4"
+      style={{ borderColor: "var(--border)" }}
+    >
+      <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:grid-cols-6">
+        <Field label="Tipo">
+          <FormSelect
+            value={filters.type}
+            onChange={(e) => handleChange("type", e.target.value)}
+          >
             {TYPE_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
-          </SelectContent>
-        </Select>
-      </div>
+          </FormSelect>
+        </Field>
 
-      {/* Community Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Comunidad</label>
-        <Select
-          value={filters.communityId}
-          onValueChange={(value) => handleChange("communityId", value ?? "")}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue>{communityDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
+        <Field label="Comunidad">
+          <FormSelect
+            value={filters.communityId}
+            onChange={(e) => handleChange("communityId", e.target.value)}
+          >
+            <option value="">Todas</option>
             {communityOptions.map((c) => (
-              <SelectItem key={c.id} value={c.id}>
+              <option key={c.id} value={c.id}>
                 {c.name}
-              </SelectItem>
+              </option>
             ))}
-          </SelectContent>
-        </Select>
-      </div>
+          </FormSelect>
+        </Field>
 
-      {/* Owner Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Propietario</label>
-        <Select
-          value={filters.ownerId}
-          onValueChange={(value) => handleChange("ownerId", value ?? "")}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue>{ownerDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+        <Field label="Propietario">
+          <FormSelect
+            value={filters.ownerId}
+            onChange={(e) => handleChange("ownerId", e.target.value)}
+          >
+            <option value="">Todos</option>
             {ownerOptions.map((o) => (
-              <SelectItem key={o.id} value={o.id}>
+              <option key={o.id} value={o.id}>
                 {o.displayName}
-              </SelectItem>
+              </option>
             ))}
-          </SelectContent>
-        </Select>
-      </div>
+          </FormSelect>
+        </Field>
 
-      {/* Status Filter */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Estado</label>
-        <Select
-          value={filters.status}
-          onValueChange={(value) => handleChange("status", (value ?? "all") as ReceiptStatus | "all")}
-        >
-          <SelectTrigger className="w-[140px]">
-            <SelectValue>{statusDisplay}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
+        <Field label="Estado">
+          <FormSelect
+            value={filters.status}
+            onChange={(e) => handleChange("status", e.target.value)}
+          >
             {STATUS_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
-          </SelectContent>
-        </Select>
+          </FormSelect>
+        </Field>
+
+        <Field label="Desde">
+          <Input
+            type="date"
+            value={filters.dateFrom}
+            onChange={(e) => handleChange("dateFrom", e.target.value)}
+          />
+        </Field>
+
+        <Field label="Hasta">
+          <Input
+            type="date"
+            value={filters.dateTo}
+            onChange={(e) => handleChange("dateTo", e.target.value)}
+          />
+        </Field>
       </div>
 
-      {/* Date From */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Desde</label>
-        <Input
-          type="date"
-          value={filters.dateFrom}
-          onChange={(e) => handleChange("dateFrom", e.target.value)}
-          className="w-[150px]"
-        />
+      <div className="mt-4 flex justify-end">
+        <Button variant="outline" onClick={onExportCSV}>
+          Exportar CSV
+        </Button>
       </div>
+    </div>
+  );
+}
 
-      {/* Date To */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Hasta</label>
-        <Input
-          type="date"
-          value={filters.dateTo}
-          onChange={(e) => handleChange("dateTo", e.target.value)}
-          className="w-[150px]"
-        />
-      </div>
-
-      <div className="flex-1" />
-
-      <Button variant="outline" onClick={onExportCSV}>
-        Exportar CSV
-      </Button>
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-muted-foreground">{label}</label>
+      {children}
     </div>
   );
 }

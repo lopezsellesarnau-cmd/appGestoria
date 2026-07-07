@@ -3,13 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormSelect } from "@/components/ui/form-select";
 import {
   Table,
   TableBody,
@@ -96,49 +90,41 @@ export function TrackingWorkspace({
   return (
     <div className="space-y-4">
       <div className="flex gap-3 items-center flex-wrap">
-        <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v ?? "")}>
-          <SelectTrigger className="w-[190px]">
-            <SelectValue>{labelFor(typeOptions, typeFilter)}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {typeOptions.map((o) => (
-              <SelectItem key={o.id || "all"} value={o.id}>
-                {o.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FormSelect
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="w-[190px]"
+        >
+          {typeOptions.map((o) => (
+            <option key={o.id || "all"} value={o.id}>
+              {o.name}
+            </option>
+          ))}
+        </FormSelect>
 
-        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v ?? "")}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue>
-              {STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ??
-                STATUS_OPTIONS[0].label}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {STATUS_OPTIONS.map((o) => (
-              <SelectItem key={o.value || "all"} value={o.value}>
-                {o.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FormSelect
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="w-[180px]"
+        >
+          {STATUS_OPTIONS.map((o) => (
+            <option key={o.value || "all"} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </FormSelect>
 
-        <Select value={communityFilter} onValueChange={(v) => setCommunityFilter(v ?? "")}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue>
-              {labelFor(communityOptions, communityFilter)}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {communityOptions.map((o) => (
-              <SelectItem key={o.id || "all"} value={o.id}>
-                {o.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FormSelect
+          value={communityFilter}
+          onChange={(e) => setCommunityFilter(e.target.value)}
+          className="w-[200px]"
+        >
+          {communityOptions.map((o) => (
+            <option key={o.id || "all"} value={o.id}>
+              {o.name}
+            </option>
+          ))}
+        </FormSelect>
 
         <div className="ml-auto">
           <TrackingFormDialog

@@ -8,7 +8,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   // Auth pages render standalone, without the sidebar/topbar chrome.
-  if (pathname === "/login" || pathname.startsWith("/auth")) {
+  if (
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname.startsWith("/auth")
+  ) {
     return <>{children}</>;
   }
 
